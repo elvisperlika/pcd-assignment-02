@@ -1,7 +1,7 @@
-package org.example;
+package pcd.ass02.controller;
 
-import org.example.model.Model;
-import org.example.view.View;
+import pcd.ass02.model.Model;
+import pcd.ass02.view.View;
 
 public class ControllerImpl implements Controller {
     private final Model model;
@@ -18,6 +18,6 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void start() {
-        model.execute();
+        model.exploreDependencies();
     }
 }

@@ -1,8 +1,9 @@
-package org.example;
+package pcd.ass02.controller;
 
-import org.example.view.View;
+import pcd.ass02.view.View;
 
 public interface Controller {
+
     void attachView(View view);
 
     void start();
