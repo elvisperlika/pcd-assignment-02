@@ -8,7 +8,7 @@ import pcd.ass02.view.ViewImpl;
 import pcd.ass02.model.TargetType;
 
 public class Main {
-    private static final String TARGET_PATH = "src/main/java/pcd/ass02/target";
+    private static final String TARGET_PATH = "src/main/java/pcd/ass02/target/other";
 
     public static void main(String[] args) {
         Model model = new Model(TargetType.PACKAGE, TARGET_PATH);
