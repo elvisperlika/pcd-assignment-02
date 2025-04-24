@@ -31,9 +31,14 @@ public class Model {
                 }
             });
         } else if (MyJavaUtil.isProject(targetPath)) {
-            System.out.println("è un progetto");
             DependencyAnalyser.getProjectDependency(targetPath, projetReportAsyncResult -> {
-
+                if (projetReportAsyncResult.succeeded()) {
+                    projetReportAsyncResult.result().getClassReportList().forEach(classReport -> {
+                        System.out.println(classReport.toString());
+                    });
+                } else {
+                    System.out.println("Fail: " + projetReportAsyncResult.cause());
+                }
             });
         } else {
             System.out.println("This path is not allowed.");

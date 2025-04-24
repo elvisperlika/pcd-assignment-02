@@ -10,7 +10,7 @@ public class MyJavaUtil {
     public static boolean isProject(String targetPath) {
         File file = new File(targetPath);
         return file.isDirectory()
-                && Arrays.stream(file.listFiles()).anyMatch(f -> f.isDirectory());
+                && Arrays.stream(file.listFiles()).anyMatch(File::isDirectory);
     }
 
     public static boolean isPackage(String targetPath) {

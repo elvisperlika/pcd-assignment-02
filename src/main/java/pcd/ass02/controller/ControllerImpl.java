@@ -19,5 +19,13 @@ public class ControllerImpl implements Controller {
     @Override
     public void start() {
         model.exploreDependencies();
+        while (true) {
+            System.out.println("loop");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
