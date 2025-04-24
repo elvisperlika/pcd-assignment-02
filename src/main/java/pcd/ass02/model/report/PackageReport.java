@@ -9,4 +9,7 @@ public interface PackageReport extends Report {
     List<ClassReport> getClassReportList();
 
     String getPackageName();
+
+    @Override
+    String toString();
 }

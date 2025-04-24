@@ -4,5 +4,5 @@ import pcd.ass02.model.report.Report;
 
 public interface View {
 
-    void showDependencies(Report report);
+    void showDependencies(String reportScheme);
 }

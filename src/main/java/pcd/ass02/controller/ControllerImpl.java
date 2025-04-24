@@ -19,6 +19,5 @@ public class ControllerImpl implements Controller {
     @Override
     public void start() {
         model.exploreDependencies();
-        view.showDependencies(model.getReport());
     }
 }

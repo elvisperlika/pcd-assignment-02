@@ -8,7 +8,7 @@ public class ClassReportImpl implements ClassReport {
     private final List<String> dependencyList;
 
     public ClassReportImpl(String className) {
-        this.className = className;
+        this.className = className.substring(className.lastIndexOf("/") + 1);
         dependencyList = new ArrayList<>();
     }
 
@@ -25,5 +25,14 @@ public class ClassReportImpl implements ClassReport {
     @Override
     public String getClassName() {
         return className;
+    }
+
+    @Override
+    public String toString() {
+        String myString = className + ": ";
+        for(String str : dependencyList) {
+            myString = myString.concat("\n - " + str);
+        }
+        return myString;
     }
 }

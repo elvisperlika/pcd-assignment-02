@@ -27,4 +27,13 @@ public class PackageReportImpl implements PackageReport {
         return packageName;
     }
 
+    @Override
+    public String toString() {
+        String myString = "* " + packageName;
+        for (ClassReport classReport : classReportList) {
+            myString = myString.concat(classReport.toString());
+        }
+        return myString;
+    }
+
 }

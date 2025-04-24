@@ -9,4 +9,7 @@ public interface ClassReport extends Report {
     List<String> getDependencyList();
 
     String getClassName();
+
+    @Override
+    String toString();
 }

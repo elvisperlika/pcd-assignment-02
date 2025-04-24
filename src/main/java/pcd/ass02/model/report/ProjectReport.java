@@ -1,10 +1,9 @@
 package pcd.ass02.model.report;
 
-public class ProjectReport {
+public interface ProjectReport {
 
-    private String projectName;
+    String getProjectName();
 
-    public String getProjectName() {
-        return projectName;
-    }
+    @Override
+    String toString();
 }

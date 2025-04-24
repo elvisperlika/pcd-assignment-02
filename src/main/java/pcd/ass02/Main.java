@@ -11,7 +11,7 @@ public class Main {
     private static final String TARGET_PATH = "src/main/java/pcd/ass02/target/other";
 
     public static void main(String[] args) {
-        Model model = new Model(TargetType.PACKAGE, TARGET_PATH);
+        Model model = new Model(TARGET_PATH);
         View view = new ViewImpl();
         Controller controller = new ControllerImpl(model);
         controller.attachView(view);
