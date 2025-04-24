@@ -7,8 +7,8 @@ public class ClassReportImpl implements ClassReport {
     private final String className;
     private final List<String> dependencyList;
 
-    public ClassReportImpl(String className) {
-        this.className = className.substring(className.lastIndexOf("/") + 1);
+    public ClassReportImpl(String classPath) {
+        this.className = classPath.substring(classPath.lastIndexOf("/") + 1);
         dependencyList = new ArrayList<>();
     }
 

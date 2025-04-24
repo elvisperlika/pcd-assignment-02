@@ -7,17 +7,14 @@ import java.util.Arrays;
 
 public class Model {
 
-    private static final String JAVA_EXTENSION = ".java";
     private final String targetPath;
-    private Report report;
-    private boolean areDependenciesFind = false;
 
     public Model(String targetPath) {
         this.targetPath = targetPath;
     }
 
     public void exploreDependencies() {
-        if (isJavaFile(targetPath)) {
+        if (MyJavaUtil.isJavaFile(targetPath)) {
             DependencyAnalyser.getClassDependency(targetPath, classReportAsyncResult -> {
                 if (classReportAsyncResult.succeeded()) {
                     System.out.println(classReportAsyncResult.result().toString());
@@ -25,7 +22,7 @@ public class Model {
                     System.out.println("Fail: " + classReportAsyncResult.cause());
                 }
             });
-        } else if (isPackage(targetPath)) {
+        } else if (MyJavaUtil.isPackage(targetPath)) {
             DependencyAnalyser.getPackageDependency(targetPath, packageReportAsyncResult -> {
                 if (packageReportAsyncResult.succeeded()) {
                     System.out.println(packageReportAsyncResult.result().toString());
@@ -33,32 +30,14 @@ public class Model {
                     System.out.println("Fail: " + packageReportAsyncResult.cause());
                 }
             });
-        } else if (isProject(targetPath)) {
-
+        } else if (MyJavaUtil.isProject(targetPath)) {
             System.out.println("è un progetto");
+            DependencyAnalyser.getProjectDependency(targetPath, projetReportAsyncResult -> {
+
+            });
         } else {
             System.out.println("This path is not allowed.");
         }
     }
 
-    private boolean isProject(String targetPath) {
-        File file = new File(targetPath);
-        return file.isDirectory()
-                && Arrays.stream(file.listFiles()).anyMatch(f -> f.isDirectory());
-    }
-
-    private boolean isPackage(String targetPath) {
-        File file = new File(targetPath);
-        return file.isDirectory()
-                && Arrays.stream(file.listFiles()).allMatch(f -> isJavaFile(f.getPath()));
-    }
-
-    private boolean isJavaFile(String targetPath) {
-        File file = new File(targetPath);
-        return file.isFile() && targetPath.contains(JAVA_EXTENSION);
-    }
-
-    public boolean areDependenciesFind() {
-        return areDependenciesFind;
-    }
 }

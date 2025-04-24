@@ -7,8 +7,8 @@ public class PackageReportImpl implements PackageReport {
     private final String packageName;
     private final List<ClassReport> classReportList;
 
-    public PackageReportImpl(String packageName) {
-        this.packageName = packageName.substring(packageName.lastIndexOf("/") + 1);
+    public PackageReportImpl(String packagePath) {
+        this.packageName = packagePath.substring(packagePath.lastIndexOf("/") + 1);
         classReportList = new ArrayList<>();
     }
 

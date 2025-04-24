@@ -21,10 +21,9 @@ public class PackageDepVerticle extends AbstractVerticle {
     }
 
     @Override
-    public void start(Promise<Void> startPromise) throws Exception {
+    public void start(Promise<Void> promise) throws Exception {
         File packageFile = new File(packageTargetPath);
         List<Future<String>> futures = new ArrayList<>();
-        List<ClassReport> classReportList = new ArrayList<>();
         Arrays.stream(packageFile.listFiles()).toList().forEach(file -> {
             ClassReport classReport = new ClassReportImpl(file.getName());
             futures.add(vertx.deployVerticle(new ClassDepVerticle(file.getPath(), classReport)));
@@ -33,9 +32,9 @@ public class PackageDepVerticle extends AbstractVerticle {
 
         Future.all(futures).onSuccess(compositeFuture -> {
            if (compositeFuture.succeeded()) {
-               startPromise.complete();
+               promise.complete();
            } else {
-               startPromise.fail("Composite future failed.");
+               promise.fail("Composite future failed.");
            }
         });
     }
