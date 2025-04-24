@@ -49,7 +49,7 @@ public class DependencyAnalyserLib {
                 res.result().forEach(file -> {
                     getClassDependencies(file, promise -> {
                         if (promise.future().succeeded()) {
-                            packageReportImpl.addOnReportList(promise.future().result());
+                            packageReportImpl.addInReportList(promise.future().result());
                         } else {
                             reportPromise.fail("A class analyse fail: " + promise.future().cause());
                         }

@@ -8,6 +8,8 @@ import pcd.ass02.model.report.PackageReportImpl;
 import pcd.ass02.model.verticle.ClassDepVerticle;
 import pcd.ass02.model.verticle.PackageDepVerticle;
 
+import java.io.File;
+
 public class DependencyAnalyser {
 
     public static void getClassDependency(String classTargetPath, Handler<AsyncResult<ClassReport>> handler) {

@@ -8,12 +8,12 @@ public class PackageReportImpl implements PackageReport {
     private final List<ClassReport> classReportList;
 
     public PackageReportImpl(String packageName) {
-        this.packageName = packageName;
+        this.packageName = packageName.substring(packageName.lastIndexOf("/") + 1);
         classReportList = new ArrayList<>();
     }
 
     @Override
-    public void addOnReportList(ClassReport result) {
+    public void addInReportList(ClassReport result) {
         this.classReportList.add(result);
     }
 
@@ -29,11 +29,11 @@ public class PackageReportImpl implements PackageReport {
 
     @Override
     public String toString() {
-        String myString = "* " + packageName;
+        StringBuilder myString = new StringBuilder(" package: { " + packageName + " }: \n");
         for (ClassReport classReport : classReportList) {
-            myString = myString.concat(classReport.toString());
+            myString.append(classReport.toString());
         }
-        return myString;
+        return myString.toString();
     }
 
 }

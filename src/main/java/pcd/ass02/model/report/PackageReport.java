@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface PackageReport extends Report {
 
-    void addOnReportList(ClassReport result);
+    void addInReportList(ClassReport result);
 
     List<ClassReport> getClassReportList();
 

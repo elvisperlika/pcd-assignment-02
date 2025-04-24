@@ -18,30 +18,26 @@ public class Model {
 
     public void exploreDependencies() {
         if (isJavaFile(targetPath)) {
-            DependencyAnalyser.getClassDependency(targetPath, reportAsync -> {
-                if (reportAsync.succeeded()) {
-                    // report = reportAsync.result();
-                    System.out.println(reportAsync.result().toString());
+            DependencyAnalyser.getClassDependency(targetPath, classReportAsyncResult -> {
+                if (classReportAsyncResult.succeeded()) {
+                    System.out.println(classReportAsyncResult.result().toString());
                 } else {
-                    System.out.println("Fail: " + reportAsync.cause());
+                    System.out.println("Fail: " + classReportAsyncResult.cause());
                 }
             });
         } else if (isPackage(targetPath)) {
-            DependencyAnalyser.getPackageDependency(targetPath, reportAsync -> {
-                if (reportAsync.succeeded()) {
-                    System.out.println("package esplorato");
-                    // report = reportAsync.result();
-                    System.out.println(reportAsync.result().toString());
+            DependencyAnalyser.getPackageDependency(targetPath, packageReportAsyncResult -> {
+                if (packageReportAsyncResult.succeeded()) {
+                    System.out.println(packageReportAsyncResult.result().toString());
                 } else {
-                    System.out.println("Fail: " + reportAsync.cause());
+                    System.out.println("Fail: " + packageReportAsyncResult.cause());
                 }
             });
         } else if (isProject(targetPath)) {
 
             System.out.println("è un progetto");
         } else {
-
-            System.out.println("Exploring failed!");
+            System.out.println("This path is not allowed.");
         }
     }
 

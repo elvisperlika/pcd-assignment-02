@@ -17,7 +17,7 @@ public class ClassDepVerticle extends AbstractVerticle {
     private final String classTargetPath;
     private final ClassReport classReport;
 
-    public ClassDepVerticle(String classTargetPath, ClassReport classReport) {
+public ClassDepVerticle(String classTargetPath, ClassReport classReport) {
         this.classTargetPath = classTargetPath;
         this.classReport = classReport;
     }

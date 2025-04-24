@@ -29,9 +29,9 @@ public class ClassReportImpl implements ClassReport {
 
     @Override
     public String toString() {
-        String myString = className + ": ";
+        String myString = className + ": \n";
         for(String str : dependencyList) {
-            myString = myString.concat("\n - " + str);
+            myString = myString + " - " + str + "\n";
         }
         return myString;
     }
