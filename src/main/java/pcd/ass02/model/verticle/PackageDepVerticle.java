@@ -24,18 +24,13 @@ public class PackageDepVerticle extends AbstractVerticle {
     public void start(Promise<Void> promise) throws Exception {
         File packageFile = new File(packageTargetPath);
         List<Future<String>> futures = new ArrayList<>();
+
         Arrays.stream(packageFile.listFiles()).toList().forEach(file -> {
             ClassReport classReport = new ClassReportImpl(file.getName());
-            futures.add(vertx.deployVerticle(new ClassDepVerticle(file.getPath(), classReport)));
+            futures.add(getVertx().deployVerticle(new ClassDepVerticle(file.getPath(), classReport)));
             packageReport.addInReportList(classReport);
         });
 
-        Future.all(futures).onSuccess(compositeFuture -> {
-           if (compositeFuture.succeeded()) {
-               promise.complete();
-           } else {
-               promise.fail("Composite future failed.");
-           }
-        });
+        Future.all(futures).onSuccess(_ -> promise.complete());
     }
 }

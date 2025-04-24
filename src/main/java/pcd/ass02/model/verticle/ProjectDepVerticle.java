@@ -27,6 +27,7 @@ public class ProjectDepVerticle extends AbstractVerticle {
     public void start(Promise<Void> promise) throws Exception {
         File projectFile = new File(projectTargetPath);
         List<Future<String>> futures = new ArrayList<>();
+        List<PackageReport> packageReportList = new ArrayList<>();
         for (File file : Arrays.stream(projectFile.listFiles()).toList()) {
             String path = file.getPath();
             if (MyJavaUtil.isJavaFile(path)) {
@@ -36,7 +37,7 @@ public class ProjectDepVerticle extends AbstractVerticle {
             } else if (MyJavaUtil.isPackage(path)) {
                 PackageReport packageReport = new PackageReportImpl(path);
                 futures.add(vertx.deployVerticle(new PackageDepVerticle(path, packageReport)));
-                projectReport.addToPackageReportList(packageReport);
+                packageReportList.add(packageReport);
             } else if (MyJavaUtil.isProject(path)) {
                 futures.add(vertx.deployVerticle(new ProjectDepVerticle(path, projectReport)));
             } else {
@@ -46,7 +47,7 @@ public class ProjectDepVerticle extends AbstractVerticle {
 
         Future.all(futures).onSuccess(compositeFuture -> {
             if (compositeFuture.succeeded()) {
-                projectReport.getPackageReportList().forEach(packageReport -> {
+                packageReportList.forEach(packageReport -> {
                     packageReport.getClassReportList().forEach(projectReport::addToClassReportList);
                 });
                 promise.complete();

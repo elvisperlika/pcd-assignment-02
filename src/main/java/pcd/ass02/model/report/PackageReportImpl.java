@@ -29,7 +29,7 @@ public class PackageReportImpl implements PackageReport {
 
     @Override
     public String toString() {
-        StringBuilder myString = new StringBuilder(" package: { " + packageName + " }: \n");
+        StringBuilder myString = new StringBuilder();
         for (ClassReport classReport : classReportList) {
             myString.append(classReport.toString());
         }

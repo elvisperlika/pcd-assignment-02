@@ -18,6 +18,7 @@ public class Model {
             DependencyAnalyser.getClassDependency(targetPath, classReportAsyncResult -> {
                 if (classReportAsyncResult.succeeded()) {
                     System.out.println(classReportAsyncResult.result().toString());
+                    System.out.println("Dipendenze trovate nella classe.");
                 } else {
                     System.out.println("Fail: " + classReportAsyncResult.cause());
                 }
@@ -26,22 +27,24 @@ public class Model {
             DependencyAnalyser.getPackageDependency(targetPath, packageReportAsyncResult -> {
                 if (packageReportAsyncResult.succeeded()) {
                     System.out.println(packageReportAsyncResult.result().toString());
+                    System.out.println("Dipendenze trovate nel package.");
                 } else {
                     System.out.println("Fail: " + packageReportAsyncResult.cause());
                 }
             });
         } else if (MyJavaUtil.isProject(targetPath)) {
-            DependencyAnalyser.getProjectDependency(targetPath, projetReportAsyncResult -> {
-                if (projetReportAsyncResult.succeeded()) {
-                    projetReportAsyncResult.result().getClassReportList().forEach(classReport -> {
+            DependencyAnalyser.getProjectDependency(targetPath, projectReportAsyncResult -> {
+                if (projectReportAsyncResult.succeeded()) {
+                    projectReportAsyncResult.result().getClassReportList().forEach(classReport -> {
                         System.out.println(classReport.toString());
                     });
+                    System.out.println("Dipendenze trovate nel progetto.");
                 } else {
-                    System.out.println("Fail: " + projetReportAsyncResult.cause());
+                    System.out.println("Fail: " + projectReportAsyncResult.cause());
                 }
             });
         } else {
-            System.out.println("This path is not allowed.");
+            System.out.println("This path is not allowed: " + targetPath);
         }
     }
 

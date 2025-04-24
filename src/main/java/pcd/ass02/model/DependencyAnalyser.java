@@ -6,8 +6,6 @@ import pcd.ass02.model.verticle.ClassDepVerticle;
 import pcd.ass02.model.verticle.PackageDepVerticle;
 import pcd.ass02.model.verticle.ProjectDepVerticle;
 
-import java.io.File;
-
 public class DependencyAnalyser {
 
     /**
