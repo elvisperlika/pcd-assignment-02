@@ -1,4 +1,4 @@
-package pcd.ass02.target.figure;
+package pcd.ass02.target.deep.moreDeep.figure;
 
 public class Triangle {
 

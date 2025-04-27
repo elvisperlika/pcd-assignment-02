@@ -3,6 +3,7 @@ package pcd.ass02.model.verticle;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.sun.source.tree.Tree;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import pcd.ass02.model.report.ClassReport;

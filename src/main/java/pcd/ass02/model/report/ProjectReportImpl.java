@@ -7,7 +7,6 @@ public class ProjectReportImpl implements ProjectReport {
 
     private final String projectName;
     private final List<ClassReport> classReportList = new ArrayList<>();
-    private final List<PackageReport> packageReportList = new ArrayList<>();
 
     public ProjectReportImpl(String projectPath) {
         this.projectName = projectPath.substring(projectPath.lastIndexOf("/") + 1);
@@ -24,17 +23,15 @@ public class ProjectReportImpl implements ProjectReport {
     }
 
     @Override
-    public void addToPackageReportList(PackageReport packageReport) {
-        packageReportList.add(packageReport);
-    }
-
-    @Override
     public List<ClassReport> getClassReportList() {
         return new ArrayList<>(classReportList);
     }
 
     @Override
-    public List<PackageReport> getPackageReportList() {
-        return new ArrayList<>(packageReportList);
+    public String toString() {
+        StringBuilder myString = new StringBuilder();
+        classReportList.forEach(c -> myString.append(c.toString()));
+        return myString.toString();
     }
+
 }

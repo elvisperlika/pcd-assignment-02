@@ -8,20 +8,12 @@ import pcd.ass02.model.verticle.ProjectDepVerticle;
 
 public class DependencyAnalyser {
 
-    /**
-     * Produce asynchronously a ClassReport with the target class's dependencies.
-     * @param classTargetPath is the target class's path.
-     * @param handler
-     */
-    public static void getClassDependency(String classTargetPath, Handler<AsyncResult<ClassReport>> handler) {
+    public static void getClassDependency(String classTargetPath, ClassReport classReport, Handler<AsyncResult<ClassReport>> handler) {
         Vertx vertx = Vertx.vertx();
-        ClassReport classReport = new ClassReportImpl(classTargetPath);
-        vertx.deployVerticle(new ClassDepVerticle(classTargetPath, classReport), asyncRes -> {
-            if (asyncRes.succeeded()) {
-                handler.handle(Future.succeededFuture(classReport));
-            } else {
-                handler.handle(Future.failedFuture(asyncRes.cause()));
-            }
+        vertx.deployVerticle(new ClassDepVerticle(classTargetPath, classReport)).onSuccess(_ -> {
+            handler.handle(Future.succeededFuture(classReport));
+        }).onFailure(throwable -> {
+            handler.handle(Future.failedFuture(throwable));
         });
     }
 
@@ -42,13 +34,20 @@ public class DependencyAnalyser {
         });
     }
 
+    /**
+     *
+     * @param projectTargetPath
+     * @param handler
+     */
     public static void getProjectDependency(String projectTargetPath, Handler<AsyncResult<ProjectReport>> handler) {
         Vertx vertx = Vertx.vertx();
         ProjectReport projectReport = new ProjectReportImpl(projectTargetPath);
         vertx.deployVerticle(new ProjectDepVerticle(projectTargetPath, projectReport), asyncRes -> {
             if (asyncRes.succeeded()) {
+                System.out.println("OK");
                 handler.handle(Future.succeededFuture(projectReport));
             } else {
+                System.out.println("BAD");
                 handler.handle(Future.failedFuture(asyncRes.cause()));
             }
         });

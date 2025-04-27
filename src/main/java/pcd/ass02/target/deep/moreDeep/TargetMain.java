@@ -1,7 +1,6 @@
-package pcd.ass02.target;
+package pcd.ass02.target.deep.moreDeep;
 
-import pcd.ass02.target.other.TargetClass2;
-import pcd.ass02.target.other.Test;
+import pcd.ass02.target.deep.moreDeep.other.altro.Test;
 import pcd.ass02.view.View;
 import pcd.ass02.view.ViewImpl;
 

@@ -12,4 +12,5 @@ public interface ClassReport extends Report {
 
     @Override
     String toString();
+
 }

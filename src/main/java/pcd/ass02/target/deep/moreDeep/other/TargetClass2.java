@@ -1,8 +1,8 @@
-package pcd.ass02.target.other;
+package pcd.ass02.target.deep.moreDeep.other;
 
 import pcd.ass02.model.report.ClassReportImpl;
 import pcd.ass02.model.report.Report;
-import pcd.ass02.target.TargetClass;
+import pcd.ass02.target.deep.moreDeep.TargetClass;
 
 public class TargetClass2 {
 

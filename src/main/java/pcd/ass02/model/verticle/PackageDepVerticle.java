@@ -31,6 +31,8 @@ public class PackageDepVerticle extends AbstractVerticle {
             packageReport.addInReportList(classReport);
         });
 
-        Future.all(futures).onSuccess(_ -> promise.complete());
+        Future.all(futures)
+                .onSuccess(_ -> promise.complete())
+                .onFailure(_ -> promise.fail("Composite future failed."));
     }
 }
