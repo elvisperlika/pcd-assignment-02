@@ -4,13 +4,14 @@ import java.util.List;
 
 public interface ProjectReport {
 
-    String getProjectName();
-
-    void addToClassReportList(ClassReport classReport);
-
-    List<ClassReport> getClassReportList();
-
     @Override
     String toString();
 
+    void setClassReportList(List<ClassReport> classReportList);
+
+    void setPackageReportList(List<PackageReport> packageReportList);
+
+    void setSubProjectReportList(List<ProjectReport> projectReportList);
+
+    void show();
 }

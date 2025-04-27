@@ -15,6 +15,8 @@ public class ProjectDepVerticle extends AbstractVerticle {
     private final String projectTargetPath;
     private final ProjectReport projectReport;
     private final List<ClassReport> classReportList = new ArrayList<>();
+    private final List<PackageReport> packageReportList = new ArrayList<>();
+    private final List<ProjectReport> projectReportList = new ArrayList<>();
 
     public ProjectDepVerticle(String projectTargetPath, ProjectReport projectReport) {
         this.projectTargetPath = projectTargetPath;
@@ -24,34 +26,35 @@ public class ProjectDepVerticle extends AbstractVerticle {
     @Override
     public void start(Promise<Void> promise) throws Exception {
         File projectFile = new File(projectTargetPath);
-        List<File> javaFiles = new ArrayList<>();
-        findAllJavaFiles(javaFiles, projectFile);
+        List<File> files = Arrays.stream(projectFile.listFiles()).toList();
         List<Future<String>> futures = new ArrayList<>();
-        for (File file : javaFiles) {
-            String filePath = file.getPath();
-            ClassReport classReport = new ClassReportImpl(filePath);
-            futures.add(getVertx().deployVerticle(new ClassDepVerticle(filePath, classReport)));
-            classReportList.add(classReport);
-        }
-
-        Future.all(futures).onSuccess(_ -> {
-            classReportList.forEach(projectReport::addToClassReportList);
-            System.out.println("ALL FEATURES OK");
-            promise.complete();
-        }).onFailure(handler -> {
-            System.out.println("ALL FEATURES BAD");
-            promise.fail("Fail B: " + handler.getCause());
-        });
-    }
-
-    private void findAllJavaFiles(List<File> javaFiles, File projectFile) {
-        for (File file : Arrays.stream(projectFile.listFiles()).toList()) {
+        files.forEach(file -> {
             if (MyJavaUtil.isJavaFile(file.getPath())) {
-                javaFiles.add(file);
-            } else if (file.isDirectory()) {
-                findAllJavaFiles(javaFiles, file);
+                ClassReport classReport = new ClassReportImpl(file.getPath());
+                futures.add(getVertx().deployVerticle(new ClassDepVerticle(file.getPath(), classReport)));
+                classReportList.add(classReport);
+            } else if (MyJavaUtil.isPackage(file.getPath())) {
+                PackageReport packageReport = new PackageReportImpl(file.getPath());
+                futures.add(getVertx().deployVerticle(new PackageDepVerticle(file.getPath(), packageReport)));
+                packageReportList.add(packageReport);
+            } else if (MyJavaUtil.isProject(file.getPath())) {
+                ProjectReport projectReport = new ProjectReportImpl(file.getPath());
+                futures.add(getVertx().deployVerticle(new ProjectDepVerticle(file.getPath(), projectReport)));
+                projectReportList.add(projectReport);
             }
-        }
+        });
+
+        Future.all(futures)
+                .onSuccess(compositeFuture -> {
+                    projectReport.setClassReportList(classReportList);
+                    projectReport.setPackageReportList(packageReportList);
+                    projectReport.setSubProjectReportList(projectReportList);
+                    promise.complete();
+                })
+                .onFailure(throwable -> {
+                    promise.fail("Project Verticle Fail: " + throwable.getCause());
+                    throwable.printStackTrace();
+                });
     }
 
 }

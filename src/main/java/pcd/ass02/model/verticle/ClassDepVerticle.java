@@ -6,6 +6,7 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.sun.source.tree.Tree;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
+import pcd.ass02.model.MyJavaUtil;
 import pcd.ass02.model.report.ClassReport;
 
 import java.io.File;
@@ -24,17 +25,18 @@ public ClassDepVerticle(String classTargetPath, ClassReport classReport) {
 
     @Override
     public void start(Promise<Void> promise) throws Exception {
-        File file = new File(classTargetPath);
+        File classFile = new File(classTargetPath);
         CompilationUnit compilationUnit;
         try {
-            compilationUnit = StaticJavaParser.parse(file);
+            compilationUnit = StaticJavaParser.parse(classFile);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         List<ClassOrInterfaceType> classOrInterfaceTypes = compilationUnit.findAll(ClassOrInterfaceType.class);
         classOrInterfaceTypes.stream().distinct().forEach(node -> {
-            classReport.addDependency(node.getNameAsString());
+            classReport.addDependency(node.getNameAsString() + MyJavaUtil.JAVA_EXTENSION);
         });
+
         promise.complete();
     }
 }

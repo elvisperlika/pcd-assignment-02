@@ -29,11 +29,12 @@ public class PackageReportImpl implements PackageReport {
 
     @Override
     public String toString() {
-        StringBuilder myString = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(" - PACKAGE: ").append(packageName).append("\n");
         for (ClassReport classReport : classReportList) {
-            myString.append(classReport.toString());
+            stringBuilder.append(classReport.toString());
         }
-        return myString.toString();
+        return stringBuilder.toString();
     }
 
 }

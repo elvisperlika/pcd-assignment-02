@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class MyJavaUtil {
 
-    private static final String JAVA_EXTENSION = ".java";
+    public static final String JAVA_EXTENSION = ".java";
 
     public static boolean isProject(String targetPath) {
         File file = new File(targetPath);

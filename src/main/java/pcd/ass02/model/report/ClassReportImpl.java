@@ -29,10 +29,11 @@ public class ClassReportImpl implements ClassReport {
 
     @Override
     public String toString() {
-        String myString = className + ": \n";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("CLASS: ").append(className).append("\n");
         for(String str : dependencyList) {
-            myString = myString + " - " + str + "\n";
+            stringBuilder.append(" -> ").append(str).append("\n");
         }
-        return myString;
+        return stringBuilder.toString();
     }
 }
