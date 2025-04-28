@@ -3,12 +3,15 @@ package pcd.ass02.model.verticle;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.resolution.types.ResolvedType;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import pcd.ass02.model.MyJavaUtil;
 import pcd.ass02.model.report.ClassReport;
 
+import javax.naming.spi.ResolveResult;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -34,12 +37,19 @@ public ClassDepVerticle(String classTargetPath, ClassReport classReport) {
         }
         List<ClassOrInterfaceType> classOrInterfaceTypes = compilationUnit.findAll(ClassOrInterfaceType.class);
         classOrInterfaceTypes.stream().distinct().forEach(node -> {
-            classReport.addClassOrInterfaceDependency("C/I: " + node.getNameAsString() + MyJavaUtil.JAVA_EXTENSION);
+            classReport.addClassOrInterfaceDependency(
+                    node.getNameAsString() + MyJavaUtil.JAVA_EXTENSION + " (class or interface) ");
         });
 
         List<ImportDeclaration> importDeclarations = compilationUnit.getImports();
         importDeclarations.forEach(importDeclaration -> {
-            classReport.addImportDependency("IMP: " + importDeclaration.getNameAsString());
+            String type;
+            if (importDeclaration.isAsterisk()) {
+                type = " (all package) ";
+            } else {
+                type = " (import) ";
+            }
+            classReport.addImportDependency(importDeclaration.getNameAsString() + type);
         });
 
         promise.complete();
