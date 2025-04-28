@@ -36,10 +36,9 @@ public class ProjectReportImpl implements ProjectReport {
 
     @Override
     public void show() {
+        System.out.println("PROJECT: " + projectName);
         showClasses(classReportList);
-        packageReportList.forEach(packageReport -> {
-            showClasses(packageReport.getClassReportList());
-        });
+        packageReportList.forEach(PackageReport::show);
         subProjectReportList.forEach(ProjectReport::show);
     }
 

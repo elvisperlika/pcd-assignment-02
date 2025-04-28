@@ -37,4 +37,10 @@ public class PackageReportImpl implements PackageReport {
         return stringBuilder.toString();
     }
 
+    @Override
+    public void show() {
+        System.out.println("   PACKAGE: " + packageName);
+        classReportList.forEach(ClassReport::show);
+    }
+
 }

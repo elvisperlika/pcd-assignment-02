@@ -26,7 +26,7 @@ public class PackageDepVerticle extends AbstractVerticle {
         List<Future<String>> futures = new ArrayList<>();
         List<File> files = Arrays.stream(packageFile.listFiles()).toList();
         if (files.isEmpty()) {
-            System.out.println("Empty Package");
+            // System.out.println("Empty Package");
             promise.complete();
         } else {
             files.stream()

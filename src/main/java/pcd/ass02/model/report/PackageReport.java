@@ -13,4 +13,5 @@ public interface PackageReport extends Report {
     @Override
     String toString();
 
+    void show();
 }

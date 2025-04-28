@@ -46,12 +46,12 @@ public class ClassReportImpl implements ClassReport {
 
     @Override
     public void show() {
-        System.out.println("CLASS: " + className);
+        System.out.println("      CLASS: " + className);
         for (String s : classOrInterfaceDependencyList) {
-            System.out.println(" - "  + s);
+            System.out.println("         - "  + s);
         }
         for (String s : importDependencies) {
-            System.out.println(" ~ " + s);
+            System.out.println("         ~ " + s);
         }
     }
 }
