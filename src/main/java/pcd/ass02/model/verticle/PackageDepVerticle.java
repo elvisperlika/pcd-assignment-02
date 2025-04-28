@@ -28,18 +28,18 @@ public class PackageDepVerticle extends AbstractVerticle {
         if (files.isEmpty()) {
             System.out.println("Empty Package");
             promise.complete();
+        } else {
+            files.stream()
+                    .filter(file -> MyJavaUtil.isJavaFile(file.getPath()))
+                    .forEach(file -> {
+                        ClassReport classReport = new ClassReportImpl(file.getName());
+                        futures.add(getVertx().deployVerticle(new ClassDepVerticle(file.getPath(), classReport)));
+                        packageReport.addInReportList(classReport);
+                    });
+
+            Future.all(futures)
+                    .onSuccess(compositeFuture -> promise.complete())
+                    .onFailure(throwable -> promise.fail("Composite future failed."));
         }
-
-        files.stream()
-                .filter(file -> MyJavaUtil.isJavaFile(file.getPath()))
-                .forEach(file -> {
-                    ClassReport classReport = new ClassReportImpl(file.getName());
-                    futures.add(getVertx().deployVerticle(new ClassDepVerticle(file.getPath(), classReport)));
-                    packageReport.addInReportList(classReport);
-                });
-
-        Future.all(futures)
-                .onSuccess(compositeFuture -> promise.complete())
-                .onFailure(throwable -> promise.fail("Composite future failed."));
     }
 }

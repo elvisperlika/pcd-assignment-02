@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 public class Main {
 
-    private static final Path TARGET_PATH = Paths.get("src/main/java/pcd/ass02");
+    private static final Path TARGET_PATH = Paths.get("src");
 
     public static void main(String[] args) {
         Future<ProjectReport> future = DependencyAnalyserLib.getProjectDependency(TARGET_PATH.toString());

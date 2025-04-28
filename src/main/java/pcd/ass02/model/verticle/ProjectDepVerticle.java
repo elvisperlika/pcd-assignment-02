@@ -16,7 +16,7 @@ public class ProjectDepVerticle extends AbstractVerticle {
     private final ProjectReport projectReport;
     private final List<ClassReport> classReportList = new ArrayList<>();
     private final List<PackageReport> packageReportList = new ArrayList<>();
-    private final List<ProjectReport> projectReportList = new ArrayList<>();
+    private final List<ProjectReport> subProjectReportList = new ArrayList<>();
 
     public ProjectDepVerticle(String projectTargetPath, ProjectReport projectReport) {
         this.projectTargetPath = projectTargetPath;
@@ -40,7 +40,7 @@ public class ProjectDepVerticle extends AbstractVerticle {
             } else if (MyJavaUtil.isProject(file.getPath())) {
                 ProjectReport projectReport = new ProjectReportImpl(file.getPath());
                 futures.add(getVertx().deployVerticle(new ProjectDepVerticle(file.getPath(), projectReport)));
-                projectReportList.add(projectReport);
+                subProjectReportList.add(projectReport);
             }
         });
 
@@ -48,7 +48,7 @@ public class ProjectDepVerticle extends AbstractVerticle {
                 .onSuccess(compositeFuture -> {
                     projectReport.setClassReportList(classReportList);
                     projectReport.setPackageReportList(packageReportList);
-                    projectReport.setSubProjectReportList(projectReportList);
+                    projectReport.setSubProjectReportList(subProjectReportList);
                     promise.complete();
                 })
                 .onFailure(throwable -> {
