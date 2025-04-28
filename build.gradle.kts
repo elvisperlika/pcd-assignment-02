@@ -16,7 +16,7 @@ dependencies {
     implementation("com.github.javaparser:javaparser-core:3.25.10")
 
     implementation("io.vertx:vertx-core:4.5.3")
-    testImplementation("io.vertx:vertx-junit5:4.5.3")
+    implementation("io.vertx:vertx-rx-java3:4.5.1")
 }
 
 tasks.test {

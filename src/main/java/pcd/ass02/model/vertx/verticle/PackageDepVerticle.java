@@ -1,12 +1,12 @@
-package pcd.ass02.model.verticle;
+package pcd.ass02.model.vertx.verticle;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import pcd.ass02.model.MyJavaUtil;
-import pcd.ass02.model.report.ClassReport;
-import pcd.ass02.model.report.ClassReportImpl;
-import pcd.ass02.model.report.PackageReport;
+import pcd.ass02.model.vertx.report.ClassReport;
+import pcd.ass02.model.vertx.report.ClassReportImpl;
+import pcd.ass02.model.vertx.report.PackageReport;
 
 import java.io.File;
 import java.util.*;

@@ -1,10 +1,10 @@
-package pcd.ass02.model;
+package pcd.ass02.model.vertx;
 
 import io.vertx.core.*;
-import pcd.ass02.model.report.*;
-import pcd.ass02.model.verticle.ClassDepVerticle;
-import pcd.ass02.model.verticle.PackageDepVerticle;
-import pcd.ass02.model.verticle.ProjectDepVerticle;
+import pcd.ass02.model.vertx.report.*;
+import pcd.ass02.model.vertx.verticle.ClassDepVerticle;
+import pcd.ass02.model.vertx.verticle.PackageDepVerticle;
+import pcd.ass02.model.vertx.verticle.ProjectDepVerticle;
 
 public class DependencyAnalyserLib {
 

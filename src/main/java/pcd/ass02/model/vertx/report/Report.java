@@ -1,4 +1,4 @@
-package pcd.ass02.model.report;
+package pcd.ass02.model.vertx.report;
 
 public interface Report {
 
