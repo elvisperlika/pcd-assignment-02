@@ -5,21 +5,23 @@ import java.util.List;
 
 public class ClassReportImpl implements ClassReport {
     private final String className;
-    private final List<String> dependencyList;
+    private final List<String> classOrInterfaceDependencyList;
+    private final List<String> importDependencies;
 
     public ClassReportImpl(String classPath) {
         this.className = classPath.substring(classPath.lastIndexOf("/") + 1);
-        dependencyList = new ArrayList<>();
+        classOrInterfaceDependencyList = new ArrayList<>();
+        importDependencies = new ArrayList<>();
     }
 
     @Override
-    public void addDependency(String nameAsString) {
-        this.dependencyList.add(nameAsString);
+    public void addClassOrInterfaceDependency(String nameAsString) {
+        this.classOrInterfaceDependencyList.add(nameAsString);
     }
 
     @Override
-    public List<String> getDependencyList() {
-        return new ArrayList<>(dependencyList);
+    public List<String> getClassOrInterfaceDependencyList() {
+        return new ArrayList<>(classOrInterfaceDependencyList);
     }
 
     @Override
@@ -31,9 +33,25 @@ public class ClassReportImpl implements ClassReport {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("CLASS: ").append(className).append("\n");
-        for(String str : dependencyList) {
+        for(String str : classOrInterfaceDependencyList) {
             stringBuilder.append(" -> ").append(str).append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void addImportDependency(String importDep) {
+        importDependencies.add(importDep);
+    }
+
+    @Override
+    public void show() {
+        System.out.println("CLASS: " + className);
+        for (String s : classOrInterfaceDependencyList) {
+            System.out.println(" - "  + s);
+        }
+        for (String s : importDependencies) {
+            System.out.println(" ~ " + s);
+        }
     }
 }

@@ -4,13 +4,16 @@ import java.util.List;
 
 public interface ClassReport extends Report {
 
-    void addDependency(String nameAsString);
+    void addClassOrInterfaceDependency(String nameAsString);
 
-    List<String> getDependencyList();
+    List<String> getClassOrInterfaceDependencyList();
 
     String getClassName();
 
     @Override
     String toString();
 
+    void show();
+
+    void addImportDependency(String importDep);
 }

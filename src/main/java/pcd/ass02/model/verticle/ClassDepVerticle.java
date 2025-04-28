@@ -2,8 +2,8 @@ package pcd.ass02.model.verticle;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.sun.source.tree.Tree;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import pcd.ass02.model.MyJavaUtil;
@@ -34,7 +34,12 @@ public ClassDepVerticle(String classTargetPath, ClassReport classReport) {
         }
         List<ClassOrInterfaceType> classOrInterfaceTypes = compilationUnit.findAll(ClassOrInterfaceType.class);
         classOrInterfaceTypes.stream().distinct().forEach(node -> {
-            classReport.addDependency(node.getNameAsString() + MyJavaUtil.JAVA_EXTENSION);
+            classReport.addClassOrInterfaceDependency("C/I: " + node.getNameAsString() + MyJavaUtil.JAVA_EXTENSION);
+        });
+
+        List<ImportDeclaration> importDeclarations = compilationUnit.getImports();
+        importDeclarations.forEach(importDeclaration -> {
+            classReport.addImportDependency("IMP: " + importDeclaration.getNameAsString());
         });
 
         promise.complete();

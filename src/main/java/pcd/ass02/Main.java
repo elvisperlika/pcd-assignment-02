@@ -9,10 +9,10 @@ import java.nio.file.Paths;
 
 public class Main {
 
-    private static final Path TARGET_PATH = Paths.get("src");
+    private static final Path TARGET_PATH = Paths.get("src/main/java/pcd/ass02/model/MyJavaUtil.java");
 
     public static void main(String[] args) {
-        Future<ProjectReport> future = DependencyAnalyserLib.getProjectDependency(TARGET_PATH.toString());
+        Future<ClassReport> future = DependencyAnalyserLib.getClassDependency(TARGET_PATH.toString());
         while (!future.isComplete()) {
             System.out.println("Future is not complete...");
             try {
