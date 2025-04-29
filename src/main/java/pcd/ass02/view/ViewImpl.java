@@ -1,4 +1,4 @@
-package pcd.ass02.model.rx.view;
+package pcd.ass02.view;
 
 import pcd.ass02.model.rx.report.ReactClassReport;
 
@@ -21,12 +21,11 @@ public class ViewImpl implements View {
         frame.setLayout(new BorderLayout());
         frame.add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
-        panel.repaint();
     }
 
     @Override
     public void update(ReactClassReport dependencyReport) {
-        System.out.println("Found: " + dependencyReport);
+        // System.out.println("Found: " + dependencyReport.getSource() + " -> " + dependencyReport.getDestination());
         panel.addToGraph(dependencyReport.getSource(), dependencyReport.getDestination());
         panel.repaint();
     }

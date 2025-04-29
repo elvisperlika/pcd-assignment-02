@@ -1,4 +1,4 @@
-package pcd.ass02.model.rx.view;
+package pcd.ass02.view;
 
 import com.github.javaparser.utils.Pair;
 
@@ -7,13 +7,12 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-record Node(String className, int x, int y){}
-
 public class MyPanel extends JPanel {
 
     public static final int PADDING_PERCENTAGE = 10;
-    private final List<Node> nodes = new ArrayList<>();
-    private final List<Pair<Node, Node>> arrows = new ArrayList<>();
+    private static final int MIN_DIST = 30;
+    private final List<MyNode> nodes = new ArrayList<>();
+    private final List<Pair<MyNode, MyNode>> arrows = new ArrayList<>();
     private final Random random = new Random();
 
     @Override
@@ -28,13 +27,14 @@ public class MyPanel extends JPanel {
         }
         if (!arrows.isEmpty()) {
             arrows.forEach(pair -> {
-                Node s = pair.a;
-                Node d = pair.b;
+                MyNode s = pair.a;
+                MyNode d = pair.b;
                 drawArrowHead(g2, s.x(), s.y(), d.x(), d.y());
             });
         }
         g.setColor(Color.BLACK);
-        g.drawString("n nodes: " + nodes.size(), 10, 25);
+        g.drawString("n. nodi: " + nodes.size(), 10, 25);
+        g.drawString("n. archi: " + arrows.size(), 10, 40);
     }
 
     private void drawArrowHead(Graphics2D g2, int x1, int y1, int x2, int y2) {
@@ -56,13 +56,27 @@ public class MyPanel extends JPanel {
         int maxWidth = this.getWidth() - minWidth;
 
         if (!nodes.stream().anyMatch(n -> n.className().equals(source))) {
-            nodes.add(new Node(source, random.nextInt(minHeight, maxHeight), random.nextInt(minWidth, maxWidth)));
+            Point point = findFreePoint(nodes, minHeight, maxHeight, minWidth, maxWidth);
+            nodes.add(new MyNode(source, point.x, point.y));
         }
         if (!nodes.stream().anyMatch(n -> n.className().equals(destination))) {
-            nodes.add(new Node(destination, random.nextInt(minHeight, maxHeight), random.nextInt(minWidth, maxWidth)));
+            Point point = findFreePoint(nodes, minHeight, maxHeight, minWidth, maxWidth);
+            nodes.add(new MyNode(destination, point.x, point.y));
         }
-        Node sourceNode = nodes.stream().filter(n -> n.className().equals(source)).findAny().get();
-        Node destinationNode = nodes.stream().filter(n -> n.className().equals(destination)).findAny().get();
+        MyNode sourceNode = nodes.stream().filter(n -> n.className().equals(source)).findAny().get();
+        MyNode destinationNode = nodes.stream().filter(n -> n.className().equals(destination)).findAny().get();
         arrows.add(new Pair<>(sourceNode, destinationNode));
+    }
+
+    private Point findFreePoint(List<MyNode> nodes, int minHeight, int maxHeight, int minWidth, int maxWidth) {
+        Point point = new Point(random.nextInt(minHeight, maxHeight), random.nextInt(minWidth, maxWidth));
+        for (MyNode node : nodes) {
+            var xAbs = Math.abs(node.x() - point.x);
+            var yAbs = Math.abs(node.y() - point.y);
+            if (Math.sqrt(xAbs * xAbs + yAbs * yAbs) < MIN_DIST) {
+                return findFreePoint(nodes, minHeight, maxHeight, minWidth, maxWidth);
+            }
+        }
+        return point;
     }
 }

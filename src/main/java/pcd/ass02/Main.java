@@ -1,14 +1,11 @@
 package pcd.ass02;
 
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.subjects.PublishSubject;
 import pcd.ass02.model.rx.DependencyAnalyserReactiveLib;
 import pcd.ass02.model.rx.report.ReactClassReport;
-import pcd.ass02.model.rx.view.View;
-import pcd.ass02.model.rx.view.ViewImpl;
+import pcd.ass02.view.View;
+import pcd.ass02.view.ViewImpl;
 
-import javax.swing.*;
-import java.awt.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,12 +22,21 @@ public class Main {
         // Class Example
         // Observable<ReactClassReport> source = DependencyAnalyserReactiveLib.getClassDependency(CLASS_PATH.toString());
 
-        Observable<ReactClassReport> source = DependencyAnalyserReactiveLib.getPackageDependency(PACKAGE_PATH.toString());
+        // Observable<ReactClassReport> source = DependencyAnalyserReactiveLib.getPackageDependency(PACKAGE_PATH.toString());
+
+        Observable<ReactClassReport> source = DependencyAnalyserReactiveLib.getProjectDependency(PROJECT_PATH.toString());
 
         View view = new ViewImpl(WIDTH, HEIGHT);
-        source.subscribe(reactClassReport -> {
-            Thread.sleep(1000);
-            view.update(reactClassReport);
-        });
+        source
+                .subscribe(reactClassReport -> {
+                    Thread.sleep(10);
+                    view.update(reactClassReport);
+                }, throwable -> {
+                    // in case of error
+                    System.out.println("Error: " +  throwable.getCause());
+                }, () -> {
+                    // onComplete
+                    System.out.println("Completed");
+                });
     }
 }

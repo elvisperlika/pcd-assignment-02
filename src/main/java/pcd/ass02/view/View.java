@@ -1,4 +1,4 @@
-package pcd.ass02.model.rx.view;
+package pcd.ass02.view;
 
 import pcd.ass02.model.rx.report.ReactClassReport;
 
