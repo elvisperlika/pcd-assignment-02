@@ -4,6 +4,7 @@ import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import io.reactivex.rxjava3.core.Emitter;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.vertx.core.Future;
@@ -49,15 +50,20 @@ public class DependencyAnalyserReactiveLib {
     }
 
     public static Observable<ReactClassReport> getPackageDependency(String packagePath) {
-        return Observable.create(emitter -> {
-            File packageFile = new File(packagePath);
-            List<File> files = Arrays.stream(packageFile.listFiles()).toList();
-            List<Observable<ReactClassReport>> list = new ArrayList<>();
-            if (files.isEmpty()) {
-                emitter.onComplete();
-            } else {
+        File packageFile = new File(packagePath);
+        List<File> files = Arrays.stream(packageFile.listFiles()).toList();
+        Observable<ReactClassReport>[] arrayList = new Observable[files.size()];
 
+        if (files.isEmpty()) {
+            return Observable.create(Emitter::onComplete);
+        } else {
+            int i = 0;
+            for (File file : files) {
+                Observable<ReactClassReport> source = DependencyAnalyserReactiveLib.getClassDependency(file.getPath());
+                arrayList[i] = source;
+                i++;
             }
-        });
+        }
+        return Observable.mergeArray(arrayList);
     }
 }
