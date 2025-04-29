@@ -9,8 +9,8 @@ import java.util.List;
 
 public class MyPanel extends JPanel {
 
-    public static final int PADDING_PERCENTAGE = 10;
-    private static final int MIN_DIST = 30;
+    public static final int PADDING_FACTOR = 20;
+    private static final int MIN_DIST = 20;
     private final List<MyNode> nodes = new ArrayList<>();
     private final List<Pair<MyNode, MyNode>> arrows = new ArrayList<>();
     private final Random random = new Random();
@@ -20,11 +20,6 @@ public class MyPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         setBackground(Color.WHITE);
-        if (!nodes.isEmpty()) {
-            nodes.forEach(node -> {
-                g2.drawString(node.className(), node.x(), node.y());
-            });
-        }
         if (!arrows.isEmpty()) {
             arrows.forEach(pair -> {
                 MyNode s = pair.a;
@@ -32,9 +27,15 @@ public class MyPanel extends JPanel {
                 drawArrowHead(g2, s.x(), s.y(), d.x(), d.y());
             });
         }
-        g.setColor(Color.BLACK);
-        g.drawString("n. nodi: " + nodes.size(), 10, 25);
-        g.drawString("n. archi: " + arrows.size(), 10, 40);
+
+        g2.setColor(Color.BLACK);
+        if (!nodes.isEmpty()) {
+            nodes.forEach(node -> {
+                g2.drawString(node.className(), node.x(), node.y());
+            });
+        }
+        g2.drawString("n. nodi: " + nodes.size(), 10, 25);
+        g2.drawString("n. archi: " + arrows.size(), 10, 40);
     }
 
     private void drawArrowHead(Graphics2D g2, int x1, int y1, int x2, int y2) {
@@ -44,15 +45,16 @@ public class MyPanel extends JPanel {
         int yArrow1 = y2 - (int)(arrowSize * Math.sin(angle - Math.PI / 6));
         int xArrow2 = x2 - (int)(arrowSize * Math.cos(angle + Math.PI / 6));
         int yArrow2 = y2 - (int)(arrowSize * Math.sin(angle + Math.PI / 6));
+        g2.setColor(Color.LIGHT_GRAY);
         g2.drawLine(x1, y1, x2, y2);
         g2.drawLine(x2, y2, xArrow1, yArrow1);
         g2.drawLine(x2, y2, xArrow2, yArrow2);
     }
 
     public void addToGraph(String source, String destination) {
-        int minHeight = getHeight() / PADDING_PERCENTAGE;
+        int minHeight = getHeight() / PADDING_FACTOR;
         int maxHeight = this.getHeight() - minHeight;
-        int minWidth = getWidth() / PADDING_PERCENTAGE;
+        int minWidth = getWidth() / PADDING_FACTOR;
         int maxWidth = this.getWidth() - minWidth;
 
         if (!nodes.stream().anyMatch(n -> n.className().equals(source))) {
@@ -69,7 +71,7 @@ public class MyPanel extends JPanel {
     }
 
     private Point findFreePoint(List<MyNode> nodes, int minHeight, int maxHeight, int minWidth, int maxWidth) {
-        Point point = new Point(random.nextInt(minHeight, maxHeight), random.nextInt(minWidth, maxWidth));
+        Point point = new Point(random.nextInt(minWidth, maxWidth), random.nextInt(minHeight, maxHeight));
         for (MyNode node : nodes) {
             var xAbs = Math.abs(node.x() - point.x);
             var yAbs = Math.abs(node.y() - point.y);

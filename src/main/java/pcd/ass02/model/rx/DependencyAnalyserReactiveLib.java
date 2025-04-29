@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pcd.ass02.model.MyJavaUtil;
 import pcd.ass02.model.rx.report.ReactClassReport;
+import pcd.ass02.view.MyPanel;
 
 import java.io.File;
 import java.util.Arrays;
@@ -54,8 +55,11 @@ public class DependencyAnalyserReactiveLib {
         } else {
             return Observable
                     .fromStream(javaFiles.stream())
-                    .flatMap(file -> DependencyAnalyserReactiveLib.getClassDependency(file.getPath())
-                            .subscribeOn(Schedulers.io()));
+                    .flatMap(file -> {
+                        System.out.println("file -> " + file.getName());
+                        return DependencyAnalyserReactiveLib.getClassDependency(file.getPath())
+                                .subscribeOn(Schedulers.io());
+                    });
         }
     }
 

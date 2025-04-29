@@ -10,12 +10,13 @@ public class ViewImpl implements View {
     private final JFrame frame;
     private final MyPanel panel;
 
-    public ViewImpl(Integer width, Integer height) {
+    public ViewImpl(int width, int height) {
         this.frame = new JFrame("Reactive Dependency Analyzer");
         this.panel = new MyPanel();
 
 
         frame.setSize(width, height);
+        panel.setSize(width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setLayout(new BorderLayout());
