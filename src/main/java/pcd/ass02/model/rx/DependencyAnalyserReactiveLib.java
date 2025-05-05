@@ -1,5 +1,6 @@
 package pcd.ass02.model.rx;
 
+import com.github.javaparser.ParserConfiguration;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
@@ -14,15 +15,24 @@ import pcd.ass02.view.MyPanel;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DependencyAnalyserReactiveLib {
 
+    private static AtomicInteger n = new AtomicInteger(-1);
+
     public static Observable<ReactClassReport> getClassDependency(String classPath) {
+        System.out.println(n.incrementAndGet());
         return Observable.create(emitter -> {
             File classFile = new File(classPath);
+
             // System.out.println("[" + Thread.currentThread().getName() + "] " + classFile.getName());
 
+            ParserConfiguration config = new ParserConfiguration()
+                    .setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_21);
+            StaticJavaParser.setConfiguration(config);
             CompilationUnit compilationUnit = StaticJavaParser.parse(classFile);
+
             List<ClassOrInterfaceType> classOrInterfaceTypes = compilationUnit.findAll(ClassOrInterfaceType.class);
             classOrInterfaceTypes.stream().distinct().forEach(node -> {
                 emitter.onNext(new ReactClassReport(classFile.getName(),
@@ -56,7 +66,7 @@ public class DependencyAnalyserReactiveLib {
             return Observable
                     .fromStream(javaFiles.stream())
                     .flatMap(file -> {
-                        System.out.println("file -> " + file.getName());
+                        // System.out.println("file -> " + file.getName());
                         return DependencyAnalyserReactiveLib.getClassDependency(file.getPath())
                                 .subscribeOn(Schedulers.io());
                     });
@@ -85,4 +95,7 @@ public class DependencyAnalyserReactiveLib {
         }
     }
 
+    public static int getNumberOfClassAnalysed() {
+        return n.get();
+    }
 }

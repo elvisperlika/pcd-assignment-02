@@ -1,6 +1,7 @@
 package pcd.ass02.view;
 
 import com.github.javaparser.utils.Pair;
+import pcd.ass02.model.rx.DependencyAnalyserReactiveLib;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +11,8 @@ import java.util.List;
 public class MyPanel extends JPanel {
 
     public static final int PADDING_FACTOR = 20;
-    private static final int MIN_DIST = 30;
-    private final List<MyNode> nodes = Collections.synchronizedList(new ArrayList<>());
+    private static final int MIN_DIST = 5;
+    private final List<MyNode> nodesToDraw = Collections.synchronizedList(new ArrayList<>());
     private final List<Pair<MyNode, MyNode>> arrows = Collections.synchronizedList(new ArrayList<>());
     private final Random random = new Random();
 
@@ -29,11 +30,11 @@ public class MyPanel extends JPanel {
         }
 
         g2.setColor(Color.BLACK);
-        if (!nodes.isEmpty()) {
-            nodes.forEach(node -> g2.drawString(node.className(), node.x(), node.y()));
+        if (!nodesToDraw.isEmpty()) {
+            nodesToDraw.forEach(node -> g2.drawString(node.className(), node.x(), node.y()));
         }
-        g2.drawString("n. nodi: " + nodes.size(), 10, 25);
-        g2.drawString("n. archi: " + arrows.size(), 10, 40);
+        g2.drawString("N. Class: " + DependencyAnalyserReactiveLib.getNumberOfClassAnalysed(), 5, 15);
+        g2.drawString("N. Dependency: " + arrows.size(), 5, 30);
     }
 
     private void drawArrowHead(Graphics2D g2, int x1, int y1, int x2, int y2) {
@@ -55,17 +56,17 @@ public class MyPanel extends JPanel {
         int minWidth = getWidth() / PADDING_FACTOR;
         int maxWidth = this.getWidth() - minWidth;
 
-        if (!nodes.stream().anyMatch(n -> n.className().equals(source))) {
-            Point point = findFreePoint(nodes, minHeight, maxHeight, minWidth, maxWidth);
-            nodes.add(new MyNode(source, point.x, point.y));
+        if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(source))) {
+            Point point = findFreePoint(nodesToDraw, minHeight, maxHeight, minWidth, maxWidth);
+            nodesToDraw.add(new MyNode(source, point.x, point.y));
         }
-        if (!nodes.stream().anyMatch(n -> n.className().equals(destination))) {
-            Point point = findFreePoint(nodes, minHeight, maxHeight, minWidth, maxWidth);
-            nodes.add(new MyNode(destination, point.x, point.y));
+        if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(destination))) {
+            Point point = findFreePoint(nodesToDraw, minHeight, maxHeight, minWidth, maxWidth);
+            nodesToDraw.add(new MyNode(destination, point.x, point.y));
         }
 
-        MyNode sourceNode = nodes.stream().filter(n -> n.className().equals(source)).findAny().get();
-        MyNode destinationNode = nodes.stream().filter(n -> n.className().equals(destination)).findAny().get();
+        MyNode sourceNode = nodesToDraw.stream().filter(n -> n.className().equals(source)).findAny().get();
+        MyNode destinationNode = nodesToDraw.stream().filter(n -> n.className().equals(destination)).findAny().get();
         arrows.add(new Pair<>(sourceNode, destinationNode));
     }
 
@@ -79,5 +80,11 @@ public class MyPanel extends JPanel {
             }
         }
         return point;
+    }
+
+    public void clearAll() {
+        nodesToDraw.clear();
+        arrows.clear();
+        this.repaint();
     }
 }
