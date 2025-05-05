@@ -39,6 +39,7 @@ public class Main {
                     System.out.println("Error: " +  throwable.getCause());
                 }, () -> {
                     // onComplete
+                    view.setFullScreen();
                     System.out.println("Completed");
                 });
     }

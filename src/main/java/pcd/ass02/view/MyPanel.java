@@ -10,9 +10,9 @@ import java.util.List;
 public class MyPanel extends JPanel {
 
     public static final int PADDING_FACTOR = 20;
-    private static final int MIN_DIST = 20;
-    private final List<MyNode> nodes = new ArrayList<>();
-    private final List<Pair<MyNode, MyNode>> arrows = new ArrayList<>();
+    private static final int MIN_DIST = 30;
+    private final List<MyNode> nodes = Collections.synchronizedList(new ArrayList<>());
+    private final List<Pair<MyNode, MyNode>> arrows = Collections.synchronizedList(new ArrayList<>());
     private final Random random = new Random();
 
     @Override
@@ -30,9 +30,7 @@ public class MyPanel extends JPanel {
 
         g2.setColor(Color.BLACK);
         if (!nodes.isEmpty()) {
-            nodes.forEach(node -> {
-                g2.drawString(node.className(), node.x(), node.y());
-            });
+            nodes.forEach(node -> g2.drawString(node.className(), node.x(), node.y()));
         }
         g2.drawString("n. nodi: " + nodes.size(), 10, 25);
         g2.drawString("n. archi: " + arrows.size(), 10, 40);
@@ -65,6 +63,7 @@ public class MyPanel extends JPanel {
             Point point = findFreePoint(nodes, minHeight, maxHeight, minWidth, maxWidth);
             nodes.add(new MyNode(destination, point.x, point.y));
         }
+
         MyNode sourceNode = nodes.stream().filter(n -> n.className().equals(source)).findAny().get();
         MyNode destinationNode = nodes.stream().filter(n -> n.className().equals(destination)).findAny().get();
         arrows.add(new Pair<>(sourceNode, destinationNode));

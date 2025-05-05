@@ -30,4 +30,10 @@ public class ViewImpl implements View {
         panel.addToGraph(dependencyReport.getSource(), dependencyReport.getDestination());
         panel.repaint();
     }
+
+    @Override
+    public void setFullScreen() {
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        this.frame.setSize(dimension);
+    }
 }

@@ -38,7 +38,7 @@ public class DependencyAnalyserReactiveLib {
                     type = " (import)";
                 }
                 emitter.onNext(new ReactClassReport(classFile.getName(),
-                        importDeclaration.getNameAsString() + type));
+                        importDeclaration.getNameAsString()));
             });
             emitter.onComplete();
         });
