@@ -10,11 +10,34 @@ import java.util.List;
 
 public class MyPanel extends JPanel {
 
-    public static final int PADDING_FACTOR = 20;
-    private static final int MIN_DIST = 5;
+    public static final int PADDING_FACTOR = 30;
+    private static final int MIN_DIST = 10;
     private final List<MyNode> nodesToDraw = Collections.synchronizedList(new ArrayList<>());
     private final List<Pair<MyNode, MyNode>> arrows = Collections.synchronizedList(new ArrayList<>());
     private final Random random = new Random();
+    private final double ray;
+    private final Point centre;
+
+    public MyPanel(int width, int height) {
+        ray = getRayByPanelSize(width, height);
+        centre = getCentreByPanelSize(width, height);
+        System.out.println(ray);
+        System.out.println(centre);
+    }
+
+    private Point getCentreByPanelSize(int width, int height) {
+        var w = width - PADDING_FACTOR;
+        var h = height - PADDING_FACTOR;
+        if (w < h) {
+            return new Point(w / 2 + PADDING_FACTOR, w / 2 + PADDING_FACTOR);
+        } else {
+            return new Point(h / 2 + PADDING_FACTOR, h / 2 + PADDING_FACTOR);
+        }
+    }
+
+    private double getRayByPanelSize(int width, int height) {
+        return width < height ? (double) (width - PADDING_FACTOR) / 2 : (double) (height - PADDING_FACTOR) / 2;
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -65,13 +88,22 @@ public class MyPanel extends JPanel {
             nodesToDraw.add(new MyNode(destination, point.x, point.y));
         }
 
-        MyNode sourceNode = nodesToDraw.stream().filter(n -> n.className().equals(source)).findAny().get();
-        MyNode destinationNode = nodesToDraw.stream().filter(n -> n.className().equals(destination)).findAny().get();
+        MyNode sourceNode = nodesToDraw.stream()
+                .filter(n -> n.className().equals(source))
+                .findAny()
+                .get();
+        MyNode destinationNode = nodesToDraw.stream()
+                .filter(n -> n.className().equals(destination))
+                .findAny()
+                .get();
         arrows.add(new Pair<>(sourceNode, destinationNode));
     }
 
     private Point findFreePoint(List<MyNode> nodes, int minHeight, int maxHeight, int minWidth, int maxWidth) {
-        Point point = new Point(random.nextInt(minWidth, maxWidth), random.nextInt(minHeight, maxHeight));
+        double degree = random.nextDouble(0, 360);
+        double cosU = Math.cos(degree);
+        double sinU = Math.sin(degree);
+        Point point = new Point(centre.x + (int) (ray * cosU), centre.y + (int) (ray * sinU));
         for (MyNode node : nodes) {
             var xAbs = Math.abs(node.x() - point.x);
             var yAbs = Math.abs(node.y() - point.y);
@@ -80,11 +112,12 @@ public class MyPanel extends JPanel {
             }
         }
         return point;
+
+//        Point point = new Point(random.nextInt(minWidth, maxWidth), random.nextInt(minHeight, maxHeight));
     }
 
     public void clearAll() {
         nodesToDraw.clear();
         arrows.clear();
-        this.repaint();
     }
 }

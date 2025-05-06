@@ -17,7 +17,7 @@ public class App {
     public App(int width, int height) {
         frame = new JFrame("Reactive Dependency Analyzer");
 
-        mainPanel = new MyPanel();
+        mainPanel = new MyPanel(width, height);
         JScrollPane scrollPane = new JScrollPane(mainPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
