@@ -10,7 +10,6 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import pcd.ass02.model.MyJavaUtil;
 import pcd.ass02.model.rx.report.ReactClassReport;
-import pcd.ass02.view.MyPanel;
 
 import java.io.File;
 import java.util.Arrays;
@@ -19,10 +18,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DependencyAnalyserReactiveLib {
 
-    private static AtomicInteger n = new AtomicInteger(-1);
-
+    static AtomicInteger n = new AtomicInteger(0);
     public static Observable<ReactClassReport> getClassDependency(String classPath) {
-        System.out.println(n.incrementAndGet());
+        System.out.println("-> " + n.incrementAndGet());
         return Observable.create(emitter -> {
             File classFile = new File(classPath);
 
@@ -66,7 +64,6 @@ public class DependencyAnalyserReactiveLib {
             return Observable
                     .fromStream(javaFiles.stream())
                     .flatMap(file -> {
-                        // System.out.println("file -> " + file.getName());
                         return DependencyAnalyserReactiveLib.getClassDependency(file.getPath())
                                 .subscribeOn(Schedulers.io());
                     });
@@ -95,7 +92,11 @@ public class DependencyAnalyserReactiveLib {
         }
     }
 
-    public static int getNumberOfClassAnalysed() {
+    public static int getClassCounter() {
         return n.get();
+    }
+
+    public static void resetCounter() {
+        n.set(0);
     }
 }

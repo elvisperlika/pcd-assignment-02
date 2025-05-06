@@ -25,7 +25,7 @@ public class App {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        JButton openButton = new JButton("Scegli tra: Java File, Package e Progetto");
+        JButton openButton = new JButton("Choose source");
         openButton.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -54,6 +54,7 @@ public class App {
     }
 
     private void activeExploration(File selectedFile) {
+        DependencyAnalyserReactiveLib.resetCounter();
         if (MyJavaUtil.isJavaFile(selectedFile.getPath())) {
             DependencyAnalyserReactiveLib.getClassDependency(selectedFile.getPath()).subscribe(this::update);
         } else if (MyJavaUtil.isPackage(selectedFile.getPath())) {
@@ -61,13 +62,14 @@ public class App {
         } else if (MyJavaUtil.isProject(selectedFile.getPath())) {
             DependencyAnalyserReactiveLib.getProjectDependency(selectedFile.getPath()).subscribe(this::update);
         } else {
-            System.out.println("Path non valida");
+            System.out.println("Invalid Path");
         }
     }
 
     public void update(ReactClassReport dependencyReport) {
         mainPanel.addToGraph(dependencyReport.getSource(), dependencyReport.getDestination());
-        mainPanel.repaint();
+        mainPanel.paintImmediately(mainPanel.getBounds()); // sync
+        // mainPanel.repaint(); // async
     }
 
     public void setFullScreen() {

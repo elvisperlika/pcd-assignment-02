@@ -33,7 +33,7 @@ public class MyPanel extends JPanel {
         if (!nodesToDraw.isEmpty()) {
             nodesToDraw.forEach(node -> g2.drawString(node.className(), node.x(), node.y()));
         }
-        g2.drawString("N. Class: " + DependencyAnalyserReactiveLib.getNumberOfClassAnalysed(), 5, 15);
+        g2.drawString("N. Class: " + DependencyAnalyserReactiveLib.getClassCounter(), 5, 15);
         g2.drawString("N. Dependency: " + arrows.size(), 5, 30);
     }
 
