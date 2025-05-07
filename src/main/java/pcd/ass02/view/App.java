@@ -6,6 +6,8 @@ import pcd.ass02.model.rx.report.ReactClassReport;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 public class App {
@@ -21,6 +23,8 @@ public class App {
         JScrollPane scrollPane = new JScrollPane(mainPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        setupZoomKeyBindings();
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -51,6 +55,29 @@ public class App {
         frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setVisible(true);
+    }
+
+    private void setupZoomKeyBindings() {
+        InputMap im = mainPanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = mainPanel.getActionMap();
+
+        // Cmd (Mac) o Ctrl (Win) + +
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()), "zoomIn");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()), "zoomOut");
+
+        am.put("zoomIn", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.zoom(1.1); // Zoom in
+            }
+        });
+
+        am.put("zoomOut", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.zoom(0.9); // Zoom out
+            }
+        });
     }
 
     private void activeExploration(File selectedFile) {

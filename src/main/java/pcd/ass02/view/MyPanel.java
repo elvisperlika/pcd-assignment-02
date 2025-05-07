@@ -11,12 +11,13 @@ import java.util.List;
 public class MyPanel extends JPanel {
 
     public static final int PADDING_FACTOR = 40;
-    public static final int INC_FACTOR = 300;
+    public static int INC_FACTOR = 100;
     private final List<MyNode> nodesToDraw = Collections.synchronizedList(new ArrayList<>());
     private final List<Pair<MyNode, MyNode>> arrows = Collections.synchronizedList(new ArrayList<>());
     private int ray;
     private Point centre;
     private String message = "";
+    private double scale = 1;
 
     public MyPanel(int width, int height) {
         // setPreferredSize(new Dimension(width, height)); // necessario per JScrollPane
@@ -42,6 +43,9 @@ public class MyPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
+        // prima di tutto
+        g2.scale(scale, scale);
+
         setBackground(Color.WHITE);
         if (!arrows.isEmpty()) {
             arrows.forEach(pair -> {
@@ -83,8 +87,6 @@ public class MyPanel extends JPanel {
         int minWidth = getWidth() / PADDING_FACTOR;
         int maxWidth = this.getWidth() - minWidth;
 
-        System.out.println(source + " -> " + destination);
-
         if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(source))) {
             findNodePointAndAdd(source);
         }
@@ -107,7 +109,10 @@ public class MyPanel extends JPanel {
         nodesToDraw.addFirst(new MyNode(source, 0, 0));
         incCircumferenceSize();
 
-        double fracDegree = 360 / nodesToDraw.size();
+        double fracDegree = (double) 360 / nodesToDraw.size();
+        if (nodesToDraw.size() % 100 == 0) {
+            INC_FACTOR = INC_FACTOR * 2;
+        }
         System.out.println("FR: " + fracDegree);
         for (int i = 0; i < nodesToDraw.size(); i++) {
             Point p = getPointByDegree(fracDegree * i);
@@ -157,5 +162,11 @@ public class MyPanel extends JPanel {
 
     public void setMessage(String s) {
         this.message = s;
+    }
+
+    public void zoom(double factor) {
+        scale *= factor;
+        revalidate();
+        repaint();
     }
 }
