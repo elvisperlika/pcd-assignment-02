@@ -10,19 +10,18 @@ import java.util.List;
 
 public class MyPanel extends JPanel {
 
-    public static final int PADDING_FACTOR = 30;
-    private static final int MIN_DIST = 10;
+    public static final int PADDING_FACTOR = 40;
+    public static final int INC_FACTOR = 300;
     private final List<MyNode> nodesToDraw = Collections.synchronizedList(new ArrayList<>());
     private final List<Pair<MyNode, MyNode>> arrows = Collections.synchronizedList(new ArrayList<>());
-    private final Random random = new Random();
-    private final double ray;
-    private final Point centre;
+    private int ray;
+    private Point centre;
+    private String message = "";
 
     public MyPanel(int width, int height) {
+        // setPreferredSize(new Dimension(width, height)); // necessario per JScrollPane
         ray = getRayByPanelSize(width, height);
         centre = getCentreByPanelSize(width, height);
-        System.out.println(ray);
-        System.out.println(centre);
     }
 
     private Point getCentreByPanelSize(int width, int height) {
@@ -35,8 +34,8 @@ public class MyPanel extends JPanel {
         }
     }
 
-    private double getRayByPanelSize(int width, int height) {
-        return width < height ? (double) (width - PADDING_FACTOR) / 2 : (double) (height - PADDING_FACTOR) / 2;
+    private int getRayByPanelSize(int width, int height) {
+        return width < height ? (width - PADDING_FACTOR) / 2 : (height - PADDING_FACTOR) / 2;
     }
 
     @Override
@@ -58,6 +57,11 @@ public class MyPanel extends JPanel {
         }
         g2.drawString("N. Class: " + DependencyAnalyserReactiveLib.getClassCounter(), 5, 15);
         g2.drawString("N. Dependency: " + arrows.size(), 5, 30);
+
+        if(!message.isEmpty()) {
+            g2.setColor(Color.BLUE);
+            g2.drawString(message, centre.x, centre.y);
+        }
     }
 
     private void drawArrowHead(Graphics2D g2, int x1, int y1, int x2, int y2) {
@@ -79,13 +83,13 @@ public class MyPanel extends JPanel {
         int minWidth = getWidth() / PADDING_FACTOR;
         int maxWidth = this.getWidth() - minWidth;
 
+        System.out.println(source + " -> " + destination);
+
         if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(source))) {
-            Point point = findFreePoint(nodesToDraw, minHeight, maxHeight, minWidth, maxWidth);
-            nodesToDraw.add(new MyNode(source, point.x, point.y));
+            findNodePointAndAdd(source);
         }
         if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(destination))) {
-            Point point = findFreePoint(nodesToDraw, minHeight, maxHeight, minWidth, maxWidth);
-            nodesToDraw.add(new MyNode(destination, point.x, point.y));
+            findNodePointAndAdd(destination);
         }
 
         MyNode sourceNode = nodesToDraw.stream()
@@ -99,25 +103,59 @@ public class MyPanel extends JPanel {
         arrows.add(new Pair<>(sourceNode, destinationNode));
     }
 
-    private Point findFreePoint(List<MyNode> nodes, int minHeight, int maxHeight, int minWidth, int maxWidth) {
-        double degree = random.nextDouble(0, 360);
-        double cosU = Math.cos(degree);
-        double sinU = Math.sin(degree);
-        Point point = new Point(centre.x + (int) (ray * cosU), centre.y + (int) (ray * sinU));
-        for (MyNode node : nodes) {
-            var xAbs = Math.abs(node.x() - point.x);
-            var yAbs = Math.abs(node.y() - point.y);
-            if (Math.sqrt(xAbs * xAbs + yAbs * yAbs) < MIN_DIST) {
-                return findFreePoint(nodes, minHeight, maxHeight, minWidth, maxWidth);
+    private void findNodePointAndAdd(String source) {
+        nodesToDraw.addFirst(new MyNode(source, 0, 0));
+        incCircumferenceSize();
+
+        double fracDegree = 360 / nodesToDraw.size();
+        System.out.println("FR: " + fracDegree);
+        for (int i = 0; i < nodesToDraw.size(); i++) {
+            Point p = getPointByDegree(fracDegree * i);
+            nodesToDraw.get(i).setNewPosition(p.x, p.y);
+        }
+
+        incPanelSize();
+    }
+
+    private void incPanelSize() {
+        MyNode maxXNode = null;
+        MyNode maxYNode = null;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+
+        for (MyNode node : nodesToDraw) {
+            if (node.x() > maxX) {
+                maxX = node.x();
+                maxXNode = node;
+            }
+            if (node.y() > maxY) {
+                maxY = node.y();
+                maxYNode = node;
             }
         }
-        return point;
 
-//        Point point = new Point(random.nextInt(minWidth, maxWidth), random.nextInt(minHeight, maxHeight));
+        setPreferredSize(new Dimension(maxXNode.x() + (PADDING_FACTOR * 4),
+                maxYNode.y() + (PADDING_FACTOR * 2)));
+    }
+
+    private void incCircumferenceSize() {
+        this.ray = this.ray + (this.ray / INC_FACTOR);
+        this.centre = new Point(centre.x + (this.ray / INC_FACTOR), centre.y + (this.ray / INC_FACTOR));
+    }
+
+    private Point getPointByDegree(double fracDegree) {
+        double angleRad = Math.toRadians(fracDegree);
+        double cosU = Math.cos(angleRad);
+        double sinU = Math.sin(angleRad);
+        return new Point((int) (centre.x + (ray * cosU)), (int) (centre.y + (ray * sinU)));
     }
 
     public void clearAll() {
         nodesToDraw.clear();
         arrows.clear();
+    }
+
+    public void setMessage(String s) {
+        this.message = s;
     }
 }

@@ -2,8 +2,8 @@ package pcd.ass02.view;
 
 public class MyNode {
     private final String className;
-    private final int x;
-    private final int y;
+    private int x;
+    private int y;
 
     public MyNode(String className, int x, int y) {
         this.className = className;
@@ -21,5 +21,10 @@ public class MyNode {
 
     public int y() {
         return y;
+    }
+
+    public void setNewPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 }

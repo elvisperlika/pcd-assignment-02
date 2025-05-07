@@ -60,14 +60,32 @@ public class App {
         } else if (MyJavaUtil.isPackage(selectedFile.getPath())) {
             DependencyAnalyserReactiveLib.getPackageDependency(selectedFile.getPath()).subscribe(this::update);
         } else if (MyJavaUtil.isProject(selectedFile.getPath())) {
-            DependencyAnalyserReactiveLib.getProjectDependency(selectedFile.getPath()).subscribe(this::update);
+            DependencyAnalyserReactiveLib.getProjectDependency(selectedFile.getPath())
+                    .subscribe(c -> {
+                        // Thread.sleep(200);
+                        this.update(c);
+                    }, er -> {
+                        this.show("ERROR: " + er.getMessage());
+                    }, () -> {
+                        this.show("COMPLETED!");
+                    });
         } else {
             System.out.println("Invalid Path");
         }
     }
 
+    private void show(String s) {
+        mainPanel.setMessage(s);
+        updateView();
+    }
+
     public void update(ReactClassReport dependencyReport) {
         mainPanel.addToGraph(dependencyReport.getSource(), dependencyReport.getDestination());
+        updateView();
+    }
+
+    private void updateView() {
+        mainPanel.revalidate();
         mainPanel.paintImmediately(mainPanel.getBounds()); // sync
         // mainPanel.repaint(); // async
     }

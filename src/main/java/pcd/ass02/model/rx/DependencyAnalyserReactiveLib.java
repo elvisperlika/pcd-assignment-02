@@ -48,6 +48,9 @@ public class DependencyAnalyserReactiveLib {
                 emitter.onNext(new ReactClassReport(classFile.getName(),
                         importDeclaration.getNameAsString()));
             });
+            if (importDeclarations.isEmpty() && classOrInterfaceTypes.isEmpty()) {
+                emitter.onNext(new ReactClassReport(classFile.getName(), "NO DEPENDENCIES"));
+            }
             emitter.onComplete();
         });
     }
