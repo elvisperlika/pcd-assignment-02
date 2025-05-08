@@ -1,7 +1,6 @@
 package pcd.ass02.view;
 
 import com.github.javaparser.utils.Pair;
-import pcd.ass02.model.rx.DependencyAnalyserReactiveLib;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,11 +15,9 @@ public class MyPanel extends JPanel {
     private final List<Pair<MyNode, MyNode>> arrows = Collections.synchronizedList(new ArrayList<>());
     private int ray;
     private Point centre;
-    private String message = "";
     private double scale = 1;
 
     public MyPanel(int width, int height) {
-        // setPreferredSize(new Dimension(width, height)); // necessario per JScrollPane
         ray = getRayByPanelSize(width, height);
         centre = getCentreByPanelSize(width, height);
     }
@@ -43,7 +40,6 @@ public class MyPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
-        // prima di tutto
         g2.scale(scale, scale);
 
         setBackground(Color.WHITE);
@@ -58,13 +54,6 @@ public class MyPanel extends JPanel {
         g2.setColor(Color.BLACK);
         if (!nodesToDraw.isEmpty()) {
             nodesToDraw.forEach(node -> g2.drawString(node.className(), node.x(), node.y()));
-        }
-        g2.drawString("N. Class: " + DependencyAnalyserReactiveLib.getClassCounter(), 5, 15);
-        g2.drawString("N. Dependency: " + arrows.size(), 5, 30);
-
-        if(!message.isEmpty()) {
-            g2.setColor(Color.BLUE);
-            g2.drawString(message, centre.x, centre.y);
         }
     }
 
@@ -160,13 +149,13 @@ public class MyPanel extends JPanel {
         arrows.clear();
     }
 
-    public void setMessage(String s) {
-        this.message = s;
-    }
-
     public void zoom(double factor) {
         scale *= factor;
         revalidate();
         repaint();
+    }
+
+    public String getDependenciesFound() {
+        return String.valueOf(arrows.size());
     }
 }

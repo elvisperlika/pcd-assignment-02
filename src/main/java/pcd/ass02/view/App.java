@@ -15,6 +15,9 @@ public class App {
     private final JFrame frame;
     private final MyPanel mainPanel;
     private File selectedFile = new File(".");
+    private final Label classNumberLabel = new Label("n Class Analysed: " + 0);
+    private final Label depNumberLabel = new Label("n Dependencies found: " + 0);
+    private final Label messageLabel = new Label("Message: ");
 
     public App(int width, int height) {
         frame = new JFrame("Reactive Dependency Analyzer");
@@ -47,6 +50,15 @@ public class App {
 
         bottomPanel.add(openButton);
         bottomPanel.add(startAnalyserButton);
+        bottomPanel.add(new Label("   |   "));
+        classNumberLabel.setSize(100, classNumberLabel.getHeight());
+        bottomPanel.add(classNumberLabel);
+        bottomPanel.add(new Label("   |   "));
+        depNumberLabel.setSize(100, depNumberLabel.getHeight());
+        bottomPanel.add(depNumberLabel);
+        bottomPanel.add(new Label("   |   "));
+        messageLabel.setSize(100, messageLabel.getHeight());
+        bottomPanel.add(messageLabel);
 
         frame.setSize(width, height);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,7 +101,7 @@ public class App {
         } else if (MyJavaUtil.isProject(selectedFile.getPath())) {
             DependencyAnalyserReactiveLib.getProjectDependency(selectedFile.getPath())
                     .subscribe(c -> {
-                        // Thread.sleep(200);
+                        this.updateLabels();
                         this.update(c);
                     }, er -> {
                         this.show("ERROR: " + er.getMessage());
@@ -101,8 +113,13 @@ public class App {
         }
     }
 
+    private void updateLabels() {
+        classNumberLabel.setText("n Class Analysed: " + DependencyAnalyserReactiveLib.getClassCounter());
+        depNumberLabel.setText("n Dependencies found: " + mainPanel.getDependenciesFound());
+    }
+
     private void show(String s) {
-        mainPanel.setMessage(s);
+        messageLabel.setText("Message: " + s);
         updateView();
     }
 
