@@ -10,8 +10,8 @@ public class ClassReportImpl implements ClassReport {
 
     public ClassReportImpl(String classPath) {
         this.className = classPath.substring(classPath.lastIndexOf("/") + 1);
-        classOrInterfaceDependencyList = new ArrayList<>();
-        importDependencies = new ArrayList<>();
+        this.classOrInterfaceDependencyList = new ArrayList<>();
+        this.importDependencies = new ArrayList<>();
     }
 
     @Override

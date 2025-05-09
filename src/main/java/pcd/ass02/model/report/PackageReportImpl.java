@@ -9,7 +9,7 @@ public class PackageReportImpl implements PackageReport {
 
     public PackageReportImpl(String packagePath) {
         this.packageName = packagePath.substring(packagePath.lastIndexOf("/") + 1);
-        classReportList = new ArrayList<>();
+        this.classReportList = new ArrayList<>();
     }
 
     @Override

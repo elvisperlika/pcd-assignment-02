@@ -3,15 +3,12 @@ package pcd.ass02.model.verticle;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.resolution.types.ResolvedType;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import pcd.ass02.model.MyJavaUtil;
 import pcd.ass02.model.report.ClassReport;
 
-import javax.naming.spi.ResolveResult;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
