@@ -20,11 +20,8 @@ public class DependencyAnalyserReactiveLib {
 
     static AtomicInteger n = new AtomicInteger(0);
     public static Observable<ReactClassReport> getClassDependency(String classPath) {
-        System.out.println("-> " + n.incrementAndGet());
         return Observable.create(emitter -> {
             File classFile = new File(classPath);
-
-            // System.out.println("[" + Thread.currentThread().getName() + "] " + classFile.getName());
 
             ParserConfiguration config = new ParserConfiguration()
                     .setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_21);
@@ -32,26 +29,29 @@ public class DependencyAnalyserReactiveLib {
             CompilationUnit compilationUnit = StaticJavaParser.parse(classFile);
 
             List<ClassOrInterfaceType> classOrInterfaceTypes = compilationUnit.findAll(ClassOrInterfaceType.class);
-            classOrInterfaceTypes.stream().distinct().forEach(node -> {
-                emitter.onNext(new ReactClassReport(classFile.getName(),
-                        node.getNameAsString() + MyJavaUtil.JAVA_EXTENSION));
-            });
-
             List<ImportDeclaration> importDeclarations = compilationUnit.getImports();
-            importDeclarations.forEach(importDeclaration -> {
-                String type;
-                if (importDeclaration.isAsterisk()) {
-                    type = " (all package)";
-                } else {
-                    type = " (import)";
-                }
-                emitter.onNext(new ReactClassReport(classFile.getName(),
-                        importDeclaration.getNameAsString()));
-            });
+
             if (importDeclarations.isEmpty() && classOrInterfaceTypes.isEmpty()) {
-                emitter.onNext(new ReactClassReport(classFile.getName(), "NO DEPENDENCIES"));
+                emitter.onNext(new ReactClassReport(classFile.getName(), ""));
+                emitter.onComplete();
+            } else {
+                classOrInterfaceTypes.stream().distinct().forEach(node -> {
+                    emitter.onNext(new ReactClassReport(classFile.getName(),
+                            node.getNameAsString() + MyJavaUtil.JAVA_EXTENSION));
+                });
+
+                importDeclarations.forEach(importDeclaration -> {
+                    String type;
+                    if (importDeclaration.isAsterisk()) {
+                        type = " (all package)";
+                    } else {
+                        type = " (import)";
+                    }
+                    emitter.onNext(new ReactClassReport(classFile.getName(),
+                            importDeclaration.getNameAsString()));
+                });
+                emitter.onComplete();
             }
-            emitter.onComplete();
         });
     }
 

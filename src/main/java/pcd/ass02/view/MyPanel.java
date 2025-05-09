@@ -10,7 +10,7 @@ import java.util.List;
 public class MyPanel extends JPanel {
 
     public static final int PADDING_FACTOR = 40;
-    public static int INC_FACTOR = 100;
+    public static int INC_FACTOR = 50;
     private final List<MyNode> nodesToDraw = Collections.synchronizedList(new ArrayList<>());
     private final List<Pair<MyNode, MyNode>> arrows = Collections.synchronizedList(new ArrayList<>());
     private int ray;
@@ -71,27 +71,25 @@ public class MyPanel extends JPanel {
     }
 
     public void addToGraph(String source, String destination) {
-        int minHeight = getHeight() / PADDING_FACTOR;
-        int maxHeight = this.getHeight() - minHeight;
-        int minWidth = getWidth() / PADDING_FACTOR;
-        int maxWidth = this.getWidth() - minWidth;
-
         if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(source))) {
             findNodePointAndAdd(source);
         }
-        if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(destination))) {
-            findNodePointAndAdd(destination);
-        }
 
-        MyNode sourceNode = nodesToDraw.stream()
-                .filter(n -> n.className().equals(source))
-                .findAny()
-                .get();
-        MyNode destinationNode = nodesToDraw.stream()
-                .filter(n -> n.className().equals(destination))
-                .findAny()
-                .get();
-        arrows.add(new Pair<>(sourceNode, destinationNode));
+        if (!destination.isEmpty()) {
+            if (!nodesToDraw.stream().anyMatch(n -> n.className().equals(destination))) {
+                findNodePointAndAdd(destination);
+            }
+
+            MyNode sourceNode = nodesToDraw.stream()
+                    .filter(n -> n.className().equals(source))
+                    .findAny()
+                    .get();
+            MyNode destinationNode = nodesToDraw.stream()
+                    .filter(n -> n.className().equals(destination))
+                    .findAny()
+                    .get();
+            arrows.add(new Pair<>(sourceNode, destinationNode));
+        }
     }
 
     private void findNodePointAndAdd(String source) {
@@ -102,7 +100,6 @@ public class MyPanel extends JPanel {
         if (nodesToDraw.size() % 100 == 0) {
             INC_FACTOR = INC_FACTOR * 2;
         }
-        System.out.println("FR: " + fracDegree);
         for (int i = 0; i < nodesToDraw.size(); i++) {
             Point p = getPointByDegree(fracDegree * i);
             nodesToDraw.get(i).setNewPosition(p.x, p.y);
@@ -128,8 +125,8 @@ public class MyPanel extends JPanel {
             }
         }
 
-        setPreferredSize(new Dimension(maxXNode.x() + (PADDING_FACTOR * 4),
-                maxYNode.y() + (PADDING_FACTOR * 2)));
+        setPreferredSize(new Dimension(maxXNode.x() + (PADDING_FACTOR * 5),
+                maxYNode.y() + (PADDING_FACTOR * 5)));
     }
 
     private void incCircumferenceSize() {

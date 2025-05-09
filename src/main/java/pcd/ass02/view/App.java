@@ -12,20 +12,25 @@ import java.io.File;
 
 public class App {
 
+    public static final int SCROLL_SPEED = 10;
     private final JFrame frame;
     private final MyPanel mainPanel;
     private File selectedFile = new File(".");
     private final Label classNumberLabel = new Label("n Class Analysed: " + 0);
     private final Label depNumberLabel = new Label("n Dependencies found: " + 0);
-    private final Label messageLabel = new Label("Message: ");
+    private final Label messageLabel = new Label("Message: none");
+    JScrollPane scrollPane;
 
     public App(int width, int height) {
         frame = new JFrame("Reactive Dependency Analyzer");
 
         mainPanel = new MyPanel(width, height);
-        JScrollPane scrollPane = new JScrollPane(mainPanel,
+        scrollPane = new JScrollPane(mainPanel,
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_SPEED);
+        scrollPane.getHorizontalScrollBar().setUnitIncrement(SCROLL_SPEED);
 
         setupZoomKeyBindings();
 
@@ -81,6 +86,8 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainPanel.zoom(1.1); // Zoom in
+                scrollPane.getHorizontalScrollBar().setValue(MouseInfo.getPointerInfo().getLocation().x);
+                scrollPane.getVerticalScrollBar().setValue(MouseInfo.getPointerInfo().getLocation().y);
             }
         });
 
@@ -114,8 +121,10 @@ public class App {
     }
 
     private void updateLabels() {
-        classNumberLabel.setText("n Class Analysed: " + DependencyAnalyserReactiveLib.getClassCounter());
-        depNumberLabel.setText("n Dependencies found: " + mainPanel.getDependenciesFound());
+        SwingUtilities.invokeLater(() -> {
+            classNumberLabel.setText("n Class Analysed: " + DependencyAnalyserReactiveLib.getClassCounter());
+            depNumberLabel.setText("n Dependencies found: " + mainPanel.getDependenciesFound());
+        });
     }
 
     private void show(String s) {
