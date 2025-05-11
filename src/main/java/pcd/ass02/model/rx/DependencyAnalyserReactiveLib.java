@@ -66,10 +66,9 @@ public class DependencyAnalyserReactiveLib {
         } else {
             return Observable
                     .fromStream(javaFiles.stream())
-                    .flatMap(file -> {
-                        return DependencyAnalyserReactiveLib.getClassDependency(file.getPath())
-                                .subscribeOn(Schedulers.io());
-                    });
+                    .flatMap(file -> DependencyAnalyserReactiveLib
+                            .getClassDependency(file.getPath())
+                            .subscribeOn(Schedulers.io()));
         }
     }
 

@@ -1,5 +1,6 @@
 package pcd.ass02.view;
 
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import pcd.ass02.model.MyJavaUtil;
 import pcd.ass02.model.rx.DependencyAnalyserReactiveLib;
 import pcd.ass02.model.rx.report.ReactClassReport;
@@ -107,6 +108,7 @@ public class App {
             DependencyAnalyserReactiveLib.getPackageDependency(selectedFile.getPath()).subscribe(this::update);
         } else if (MyJavaUtil.isProject(selectedFile.getPath())) {
             DependencyAnalyserReactiveLib.getProjectDependency(selectedFile.getPath())
+                    .subscribeOn(Schedulers.computation())
                     .subscribe(c -> {
                         this.updateLabels();
                         this.update(c);
