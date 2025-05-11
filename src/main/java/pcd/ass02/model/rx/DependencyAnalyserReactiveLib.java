@@ -66,6 +66,7 @@ public class DependencyAnalyserReactiveLib {
         } else {
             return Observable
                     .fromStream(javaFiles.stream())
+                    .subscribeOn(Schedulers.computation())
                     .flatMap(file -> DependencyAnalyserReactiveLib
                             .getClassDependency(file.getPath())
                             .subscribeOn(Schedulers.io()));
@@ -80,6 +81,7 @@ public class DependencyAnalyserReactiveLib {
         } else {
             return Observable
                     .fromStream(files.stream())
+                    .subscribeOn(Schedulers.computation())
                     .flatMap(file -> {
                         if (MyJavaUtil.isJavaFile(file.getPath())) {
                             return DependencyAnalyserReactiveLib.getClassDependency(file.getPath());
